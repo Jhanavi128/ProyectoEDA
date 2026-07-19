@@ -105,9 +105,6 @@ public class MetodosListasCirculares {
             Fin Si
             Si (preguntar("Desea ingresar otro nodo?") == no) Entonces
                 continuar <- falso
-                Fin Si
-            Sino
-                continuar <- falso
             Fin Si
     Fin Mientras
     Fin Algoritmo
@@ -150,7 +147,7 @@ public class MetodosListasCirculares {
     I, L <- Campos del nodo
     continuar <- verdadero
     Mientras (continuar) Hacer
-        Si (preguntar("¿Desea ingresar un nodo?") == si) Entonces
+        Si (preguntar("Desea ingresar un nodo?") == si) Entonces
             Si (P == null) Entonces
             Crear(T)
             Leer T^.I
@@ -160,9 +157,6 @@ public class MetodosListasCirculares {
             InsertarFinalListaCircular()
         Fin Si
         Si (preguntar("¿Desea ingresar otro nodo?") == no) Entonces
-            continuar <- falso
-        Fin Si
-        Sino
             continuar <- falso
         Fin Si
     Fin Mientras
