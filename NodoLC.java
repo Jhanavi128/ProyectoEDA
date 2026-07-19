@@ -1,4 +1,3 @@
-package Listas.ListaCircular;
 
 public class NodoLC {
     // Campos del nodo (I, L en tu pseudocódigo)
