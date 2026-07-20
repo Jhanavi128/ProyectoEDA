@@ -272,5 +272,102 @@ public class MetodosListasCirculares {
             JOptionPane.showMessageDialog(null, "La lista está vacía.");
         }
     }
+    
+    /* 
+     * ALGORITMO ELIMINAR INICIO LISTA CIRCULAR
+     * Pseudocodigo:
+     * Algoritmo EliminarInicioListaCircular()
+     * P, Q <- Punteros
+     * 
+     * Si (P != null) Entonces
+     *     Si (P^.L == P) Entonces  //Caso 1: Solo hay un nodo
+     *         P <- null
+     *     Sino                     //Caso 2: Hay más de un nodo
+     *         Q <- P
+     *         Mientras (Q^.L != P) Hacer
+     *             Q <- Q^.L
+     *         Fin Mientras
+     *         P <- P^.L            //El inicio pasa a ser el segundo nodo
+     *         Q^.L <- P            //El último nodo apunta al nuevo inicio
+     *     Fin Si
+     *     imprimir("Nodo al inicio eliminado")
+     * Sino
+     *     imprimir("La lista está vacía")
+     * Fin Si
+     * Fin Algoritmo
+     */
+    public void eliminarInicioListaCircular() {
+        if (this.P != null) {
+            // Verificamos si es el único nodo de la lista
+            if (this.P.getLIGA() == this.P) {
+                this.P = null; // La lista queda vacía
+            } else {
+                this.Q = this.P;
+                
+                // Recorremos hasta encontrar el último nodo
+                while (this.Q.getLIGA() != this.P) {
+                    this.Q = this.Q.getLIGA();
+                }
+                
+                // Movemos el inicio (P) al siguiente nodo
+                this.P = this.P.getLIGA();
+                
+                // Conectamos el último nodo con el nuevo inicio
+                this.Q.setLIGA(this.P); 
+            }
+            JOptionPane.showMessageDialog(null, "Nodo al inicio eliminado con éxito.");
+        } else {
+            JOptionPane.showMessageDialog(null, "La lista está vacía. No hay elementos para eliminar.");
+        }
+    }
+
+    /* 
+     * ALGORITMO ELIMINAR FINAL LISTA CIRCULAR
+     * Pseudocodigo:
+     * Algoritmo EliminarFinalListaCircular()
+     * P, Q, T <- Punteros
+     * 
+     * Si (P != null) Entonces
+     *     Si (P^.L == P) Entonces  // Caso 1: Solo hay un nodo
+     *         P <- null
+     *     Sino                     // Caso 2: Hay más de un nodo
+     *         Q <- P
+     *         Mientras (Q^.L != P) Hacer 
+     *             T <- Q                 // T se queda en el nodo anterior a Q
+     *             Q <- Q^.L              // Q avanza al siguiente
+     *         Fin Mientras
+     *         T^.L <- P                // El penúltimo nodo ahora apunta al inicio
+     *     Fin Si
+     *     imprimir("Nodo al final eliminado")
+     * Sino
+     *     imprimir("La lista está vacía")
+     * Fin Si
+     * Fin Algoritmo
+     */
+    public void eliminarFinalListaCircular() {
+        if (this.P != null) {
+            // Verificamos si es el único nodo de la lista
+            if (this.P.getLIGA() == this.P) {
+                this.P = null; // La lista queda vacía
+            } else {
+                this.Q = this.P;
+                this.T = null; // T rastreará el nodo anterior a Q
+                
+                // Recorremos hasta que Q sea el último nodo
+                while (this.Q.getLIGA() != this.P) {
+                    this.T = this.Q;           // T guarda la posición actual
+                    this.Q = this.Q.getLIGA(); // Q avanza a la siguiente posición
+                }
+                
+                // El penúltimo nodo (T) ahora apunta al inicio (P)
+                // Q queda desconectado y Java lo elimina de la memoria
+                this.T.setLIGA(this.P); 
+            }
+            JOptionPane.showMessageDialog(null, "Nodo al final eliminado con éxito.");
+        } else {
+            JOptionPane.showMessageDialog(null, "La lista está vacía. No hay elementos para eliminar.");
+        }
+    }
+
 
 }
