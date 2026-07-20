@@ -582,37 +582,41 @@ const viewsData = {
   title:'Eliminación al Final',
   pseudo:[
 'Algoritmo eliminarFinalListaCircular() {',
-'  Si (p == null) {',
-'    imprimir("La lista está vacía")',
-'  } Sino {',
+'  Si (p != null) {',
 '    Si (p.liga == p) {',
 '      p = null',
 '    } Sino {',
 '      q = p',
-'      Mientras (q.liga.liga != p) {',
+'      t = null',
+'      Mientras (q.liga != p) {',
+'        t = q',
 '        q = q.liga',
 '      }',
-'      t = q.liga',
-'      q.liga = p',
+'      t.liga = p',
 '    }',
+'  } Sino {',
+'    imprimir("La lista está vacía")',
 '  }',
 '}'],
   code:
 `public void eliminarFinalListaCircular() {
-    if (this.P == null) {
-        JOptionPane.showMessageDialog(null, "La lista está vacía.");
-    } else {
+    if (this.P != null) {
         if (this.P.getLIGA() == this.P) {
-            this.P = null;
+            this.P = null; 
         } else {
             this.Q = this.P;
-            while (this.Q.getLIGA().getLIGA() != this.P) {
-                this.Q = this.Q.getLIGA();
+            this.T = null; 
+            
+            while (this.Q.getLIGA() != this.P) {
+                this.T = this.Q;           
+                this.Q = this.Q.getLIGA(); 
             }
-            this.T = this.Q.getLIGA();
-            this.Q.setLIGA(this.P);
+            
+            this.T.setLIGA(this.P); 
         }
-        JOptionPane.showMessageDialog(null, "Nodo eliminado con éxito.");
+        JOptionPane.showMessageDialog(null, "Nodo al final eliminado con éxito.");
+    } else {
+        JOptionPane.showMessageDialog(null, "La lista está vacía. No hay elementos para eliminar.");
     }
 }`
 },
@@ -1140,28 +1144,33 @@ async function animEliminacionFinal(){
   lockUI(true);
   clearLog();
   if(nodes.length===0){
-    await step(1, {}, `P == null? Sí`);
-    await step(2, {}, `La lista está vacía.`);
+    await step(1, {}, `P != null? No`);
+    await step(14, {}, `La lista está vacía.`);
     lockUI(false); return;
   }
-  await step(1, {}, `P == null? No`);
+  await step(1, {}, `P != null? Sí`);
   if(nodes.length===1){
-    await step(4, {P:0}, `¿P.Liga == P? Sí → solo hay un nodo`);
+    await step(2, {P:0}, `¿P.Liga == P? Sí → solo hay un nodo`);
     nodes = [];
-    await step(5, {}, `P = null → la lista queda vacía`);
+    await step(3, {}, `P = null → la lista queda vacía`);
   } else {
-    await step(6, {P:0}, `¿P.Liga == P? No → rama Sino`);
+    await step(4, {P:0}, `¿P.Liga == P? No → rama Sino`);
     let q = 0;
-    await step(7, {P:0,Q:0}, `Q = P (el nodo a eliminar)`);
-    while(q !== nodes.length-2){
-      await step(8, {P:0,Q:q}, `¿Q.Liga.Liga != P? Sí → seguir avanzando`);
+    let t = null;
+    await step(5, {P:0,Q:0}, `Q = P`);
+    await step(6, {P:0,Q:0}, `T = null`);
+    
+    while(q !== nodes.length-1){
+      await step(7, {P:0,Q:q,T:t!==null?t:-1}, `¿Q.Liga != P? Sí → seguir avanzando`);
+      t = q;
+      await step(8, {P:0,Q:q,T:t}, `T = Q (T sigue a Q)`);
       q++;
-      await step(9, {P:0,Q:q}, `Q = Q.Liga`);
+      await step(9, {P:0,Q:q,T:t}, `Q = Q.Liga`);
     }
-    await step(8, {P:0,Q:q}, `¿Q.Liga.Liga != P? No → Q es el penúltimo nodo`);
-    await step(11, {P:0,Q:q,T:q+1}, `T = Q.Liga (el último nodo, a eliminar)`);
-    nodes = nodes.slice(0,-1);
-    await step(12, {P:0,Q:q}, `Q.Liga = P → el penúltimo nodo cierra el círculo con el inicio`);
+    
+    await step(7, {P:0,Q:q,T:t}, `¿Q.Liga != P? No → Q es el último nodo`);
+    nodes = nodes.slice(0,-1); // Se elimina visualmente el último nodo
+    await step(11, {P:0,Q:q,T:t}, `T.Liga = P → el penúltimo nodo (T) cierra el círculo con el inicio`);
   }
   renderListStrip();
   renderPseudo(-1);
